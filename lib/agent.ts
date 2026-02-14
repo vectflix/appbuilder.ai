@@ -18,7 +18,7 @@ export async function runAgent(messages: any[]): Promise<AgentResponse> {
       Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "llama3-70b-8192",  // safer model
+      model: "llama-3.3-70b-versatile",
       temperature: 0.7,
       messages: [
         {
@@ -26,7 +26,7 @@ export async function runAgent(messages: any[]): Promise<AgentResponse> {
           content: `
 You are an autonomous AI software architect.
 
-Always respond in STRICT JSON format:
+Always respond ONLY in STRICT JSON format:
 
 {
   "phase": "question" | "planning" | "generating" | "complete",
@@ -40,7 +40,7 @@ Always respond in STRICT JSON format:
   ]
 }
 
-If not generating, do not include files.
+If not generating yet, do not include files.
           `
         },
         ...messages
@@ -49,8 +49,6 @@ If not generating, do not include files.
   })
 
   const data = await response.json()
-
-  console.log("Groq raw response:", JSON.stringify(data))
 
   if (!data.choices) {
     throw new Error(JSON.stringify(data))
