@@ -16,12 +16,12 @@ export async function POST(req: Request) {
     })
 
     const completion = await groq.chat.completions.create({
-      model: "mixtral-8x7b-32768",
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",
           content:
-            "You are an expert full-stack developer. Return only clean code. No explanations."
+            "You are an expert full-stack developer. Return only clean production-ready code. No explanations."
         },
         {
           role: "user",
