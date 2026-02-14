@@ -16,17 +16,19 @@ export async function POST(req: Request) {
     })
 
     const completion = await groq.chat.completions.create({
-      model: "llama3-70b-8192",
+      model: "mixtral-8x7b-32768",
       messages: [
         {
           role: "system",
-          content: "You are an expert full-stack developer. Return only clean code."
+          content:
+            "You are an expert full-stack developer. Return only clean code. No explanations."
         },
         {
           role: "user",
           content: prompt
         }
-      ]
+      ],
+      temperature: 0.3
     })
 
     return Response.json({
@@ -34,7 +36,7 @@ export async function POST(req: Request) {
     })
   } catch (error: any) {
     return Response.json(
-      { error: error.message || "Unknown error" },
+      { error: error.message || "Unknown server error" },
       { status: 500 }
     )
   }
