@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export default function Home() {
   return (
     <main style={{
@@ -13,9 +15,18 @@ export default function Home() {
         AppBuilderAI 🚀
       </h1>
 
-      <p style={{ marginTop: "20px", opacity: 0.7 }}>
-        AI App Builder Platform
-      </p>
+      <Link
+        href="/dashboard"
+        style={{
+          marginTop: "30px",
+          padding: "12px 24px",
+          background: "white",
+          color: "black",
+          textDecoration: "none"
+        }}
+      >
+        Enter Dashboard
+      </Link>
     </main>
   )
 }
