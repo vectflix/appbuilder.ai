@@ -3,7 +3,28 @@
 import { useState } from "react"
 
 export default function Dashboard() {
-  const [code, setCode] = useState("// AI generated code will appear here")
+  const [prompt, setPrompt] = useState("")
+  const [code, setCode] = useState("// AI output will appear here")
+  const [loading, setLoading] = useState(false)
+
+  const generate = async () => {
+    if (!prompt) return
+
+    setLoading(true)
+
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt })
+    })
+
+    const data = await res.json()
+
+    setCode(data.output || "Error generating code")
+    setLoading(false)
+  }
 
   return (
     <div
@@ -15,43 +36,26 @@ export default function Dashboard() {
         color: "white"
       }}
     >
-      {/* Mobile Header */}
-      <div
-        style={{
-          padding: "15px",
-          borderBottom: "1px solid #222",
-          fontWeight: "bold"
-        }}
-      >
+      <div style={{ padding: "15px", borderBottom: "1px solid #222" }}>
         AppBuilderAI
       </div>
 
-      {/* Main Layout */}
       <div
         style={{
           display: "flex",
           flex: 1,
-          flexDirection: window.innerWidth < 768 ? "column" : "row"
+          flexDirection: "column"
         }}
       >
-        {/* Chat Panel */}
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "400px",
-            borderRight: window.innerWidth >= 768 ? "1px solid #222" : "none",
-            borderBottom: window.innerWidth < 768 ? "1px solid #222" : "none",
-            padding: "20px"
-          }}
-        >
-          <h2>AI Chat</h2>
-
+        {/* Chat */}
+        <div style={{ padding: "20px", borderBottom: "1px solid #222" }}>
           <textarea
             placeholder="Describe the app you want..."
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
             style={{
               width: "100%",
-              height: "150px",
-              marginTop: "15px",
+              height: "120px",
               background: "#111",
               color: "white",
               border: "1px solid #333",
@@ -61,6 +65,7 @@ export default function Dashboard() {
           />
 
           <button
+            onClick={generate}
             style={{
               marginTop: "15px",
               padding: "10px 20px",
@@ -71,28 +76,18 @@ export default function Dashboard() {
               width: "100%"
             }}
           >
-            Generate
+            {loading ? "Generating..." : "Generate"}
           </button>
         </div>
 
-        {/* Code Panel */}
-        <div
-          style={{
-            flex: 1,
-            padding: "20px",
-            overflow: "auto"
-          }}
-        >
-          <h2>Code Output</h2>
-
+        {/* Output */}
+        <div style={{ flex: 1, padding: "20px", overflow: "auto" }}>
           <pre
             style={{
-              marginTop: "15px",
               background: "#111",
               padding: "20px",
-              overflow: "auto",
-              height: "70vh",
-              borderRadius: "6px"
+              borderRadius: "6px",
+              minHeight: "100%"
             }}
           >
             {code}
